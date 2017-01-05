@@ -1,0 +1,31 @@
+#version 330
+
+in  vec4 f_V4Normal;
+in  vec4 f_V4TexCoord;
+in  vec4 f_V4Position;
+
+out vec4 f_V4FragColor;
+
+void main(){
+    vec4 f_V4LightSpc  = vec4(1.0, 1.0, 1.0, 0.0);
+    vec4 f_V4LightDif  = vec4(0.0, 0.4, 0.4, 0.0);
+	vec4 f_V4LightAmb  = vec4(0.0, 0.1, 0.1, 0.0);
+    vec4 f_V4LightPos  = vec4(0.5, 0.0, -5.0, 1.0);
+	float f_fShininess = 20.0;
+
+	vec4 f_V4EyePos    = vec4(0.0, 0.0, 1.0, 1.0);
+
+	vec4 f_V4LightDir  = f_V4Position - f_V4LightPos;
+	vec4 f_V4EyeDir    = f_V4Position - f_V4EyePos;
+	vec4 f_V4LightRflc = reflect(-f_V4LightDir, f_V4Normal);
+
+	float f_fDiffuse  = max(0.0, dot(normalize(f_V4LightDir), normalize(f_V4Normal)));
+	float f_fSpecular = pow(max(0.0, dot(normalize(f_V4LightRflc), normalize(f_V4EyeDir))), f_fShininess);
+
+	if(dot(f_V4LightDir, f_V4Normal) < 0.0){
+		f_V4FragColor = f_V4LightAmb + vec4(0.0, 0.0, 0.0, 1.0);
+	}
+	else{
+		f_V4FragColor = f_V4LightAmb + f_V4LightDif * f_fDiffuse + f_fSpecular * f_V4LightSpc + vec4(0.0, 0.0, 0.0, 1.0);
+	}
+}

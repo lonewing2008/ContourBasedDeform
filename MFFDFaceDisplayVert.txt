@@ -1,0 +1,23 @@
+#version 330
+
+in  vec4 v_V4TexCoord;
+in  vec4 v_V4Position;
+in  vec4 v_V4Normal;
+
+out vec4 f_V4TexCoord;
+out vec4 f_V4Normal;
+out vec4 f_V4Position;
+
+uniform mat4 v_MatCamera;
+uniform mat4 v_MatModel;
+
+void main(){
+    f_V4TexCoord = v_V4TexCoord;
+
+	vec4 v_V4TransformedNormal =  v_MatModel * v_V4Normal;
+	f_V4Normal = v_MatCamera * v_V4TransformedNormal;
+
+	vec4 v_V4GlobalPos = v_MatModel * v_V4Position;
+	f_V4Position = v_MatCamera * v_V4GlobalPos;
+    gl_Position  = f_V4Position;
+}
